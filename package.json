@@ -14,5 +14,14 @@
     "express": "^4.16.4",
     "nodemon": "^2.0.7"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luistramos/node-challenge-chat-server.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/luistramos/node-challenge-chat-server/issues"
+  },
+  "homepage": "https://github.com/luistramos/node-challenge-chat-server#readme"
 }
