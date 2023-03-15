@@ -6,7 +6,7 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended:true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 const welcomeMessage = {
@@ -30,6 +30,13 @@ app.get("/messages", function (request, response) {
 
 app.post("/messages", function (request, response) {
   const newMessageId = messages.length > 0 ? messages[messages.length-1].id+1:0;
+  if(request.body.from.length ==0){
+    return response.status(400).json("From is not valid")
+  }
+  if(request.body.text.length ==0){
+    return response.status(400).json("Text is not valid")
+  }
+
   const newMessage = {
     id: newMessageId,
     from: request.body.from,
@@ -38,6 +45,24 @@ app.post("/messages", function (request, response) {
   messages.push(newMessage);
   response.status(201).json(messages);
 });
+
+app.get("/messages/search", function (request, response) {
+  let searchQuery = request.query.search;
+  console.log("3")
+  console.log(searchQuery);
+  let result = [];
+  for (const obj of messages) {
+    if(obj.text.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase())) {
+      result.push(obj);
+    }} 
+  response.send(result);
+});
+
+app.get("/messages/latest", function (request, response) {
+  let searchLast = messages.slice(-2);
+  response.send(searchLast);
+});
+
 
 app.get("/messages/:message_id", function (request, response) {
   const messageId = request.params.message_id;
@@ -48,6 +73,7 @@ app.get("/messages/:message_id", function (request, response) {
     response.status(404).send("Not Found");
   }
 });
+
 
 app.delete("/messages/:message_id", function (request, response) {
   const messageId = request.params.message_id;
@@ -60,7 +86,6 @@ app.delete("/messages/:message_id", function (request, response) {
   }
 });
 
-
 app.listen(3000, () => {
-   console.log("Listening on port 3000")
-  });
+  console.log("Listening on port 3000")
+});
